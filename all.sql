@@ -9,4 +9,12 @@ CREATE TABLE `user` (
       `login_ip` varchar(50) DEFAULT NULL,
       PRIMARY KEY (`id`),
       UNIQUE KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `dbmo_server` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `server` varchar(125) NOT NULL,
+    `port` varchar(25) NOT NULL,
+    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;

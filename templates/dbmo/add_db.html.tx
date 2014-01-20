@@ -1,4 +1,29 @@
 : cascade layouts::default { title => 'Add DB', menu => 'dbmo' }
 : around content -> {
-    
+    <ul class="breadcrumb">
+        <li>
+            <a href="/">Home</a> <span class="divider">/</span>
+        </li>
+        <li class="active">Add DB Server</li>
+    </ul>
+
+    <form class="ajax form-horizontal" method="post" autocomplete="off" action="/dbmo/save">
+        <div class="control-group">
+            <label class="control-label" for="ip"><i style="color:red">*</i> IP</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="server" name="server">
+                <p style="color:#d5d5d5" class="help-block">input DB Server IP</p><br />
+            </div>
+
+            <label class="control-label" for="port"><i style="color:red">*</i> Port</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="port" name="port">
+                <p style="color:#d5d5d5" class="help-block">input DB Server Port</p><br />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="add" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </form>
 : }
