@@ -27,6 +27,8 @@ use Mojo::JSON;
 use JSON::XS;
 use MY::Utils;
 use utf8;
+use M::User;
+use Data::Dumper;
 
 sub startup {
     my $self = shift;
@@ -49,7 +51,7 @@ sub startup {
     
     my $config = $self->plugin('Config', { file => 'config.conf' });
 
-    $ENV{DBI_DATABASE} = 'imot'
+    $ENV{DBI_DATABASE} = 'imot';
     $ENV{DBI_USER} = 'root';
     $ENV{DBI_HOST} = '127.0.0.1';
     if ($ENV{ENV} eq "local") {
@@ -279,6 +281,7 @@ sub startup {
         'validate_user' => sub {
             my ($self, $username, $password, $msg) = @_;
             my $login = M::User::login($username, $password, $self->config->{login_key}, $self->config->{sign_key}, $self->config->{auth_url});
+            print Dumper($login);
 
             if ($login->{status} eq "err") {
                 $msg->{data} = $login->{msg};

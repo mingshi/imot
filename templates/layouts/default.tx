@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title><: $title ? $title ~ '-' : '' :>互众代码发布平台</title> 
+<link type="text/css" rel="stylesheet" href="/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" />
+<link type="text/css" rel="stylesheet" href="/css/main.css?v=0118" />
+: if $custom_css {
+<style><: $custom_css :></style>
+: }
+<script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script> 
+<script type="text/javascript" src="/js/jquery-ui-1.9.1.custom.min.js"></script> 
+<script type="text/javascript" src="/highcharts/js/highcharts.js"></script> 
+<script type="text/javascript" src="/highcharts/js/highcharts-more.js"></script> 
+<script type="text/javascript" src="/highcharts/js/modules/exporting.js"></script> 
+</head> 
+<body> 
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">互众运维支撑平台</a>
+            
+        : if $c.is_user_authenticated {
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+                <li <: $menu == 'dbmo' ? raw('class="active"') : '' :> class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">DBMO<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/dbmo/db_list">数据库列表</a></li>
+                        <li><a href="/dbmo/add_db">添加数据库</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav pull-right">
+                <li><a style="font-size:15px;color:#fff;cursor:pointer;" ><i class="icon-user icon-white"></i> <: $c.current_user.info.realname :></a></li>
+                <li class="divider-vertical"/>
+                <li><a href="/logout">退出</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        : }
+        </div>
+      </div>
+    </div> 
+
+    <div class="container">
+    : block content -> {}
+    <footer>
+        <p>Adeaz DevOPS Support System V1.0 By Mingshi fivemingshi@gmail.com</p>
+    </footer>
+    </div>
+    
+   <div id="popup-msg" class="alert" style="display:none">
+   </div>
+
+    : block modal -> {}
+
+    <script src="/js/common.js?v=0422"></script>
+
+    : if $__msg && $__msg.msg {
+    <script>
+    $(function(){
+        popup_msg(<: $__msg.msg | jsstr :>, <: $__msg.type | jsstr :>);
+    });
+    </script>
+    : }
+
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+    </body>
+</html>
