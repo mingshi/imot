@@ -3,7 +3,7 @@
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-<title><: $title ? $title ~ '-' : '' :>互众代码发布平台</title> 
+<title><: $title ? $title ~ '-' : '' :>运维支撑平台</title> 
 <link type="text/css" rel="stylesheet" href="/css/smoothness/jquery-ui-1.9.1.custom.min.css" />
 <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
 <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" />
@@ -26,7 +26,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">互众运维支撑平台</a>
+          <a class="brand" href="/">运维支撑平台</a>
             
         : if $c.is_user_authenticated {
           <div class="nav-collapse collapse">
