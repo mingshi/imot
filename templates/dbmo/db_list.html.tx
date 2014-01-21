@@ -1,4 +1,13 @@
 : cascade layouts::default { title => 'DB List', menu => 'dbmo' }
 : around content -> {
-    
+    <ul class="thumbnails" scrollpagination="enabled">
+        : for $list_data -> $server {
+            <li class="span2">
+                <a style="cursor:pointer;" href="detail/<: $server.id :>"><img style="width:100px;" src="/images/db.png" /></a>
+                <span style="text-align:center;">
+                    <: $server.server :>:<: $server.port :>
+                </span>
+            </li>
+        : }
+    </ul>
 : }

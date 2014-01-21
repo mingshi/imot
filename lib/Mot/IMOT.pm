@@ -29,6 +29,7 @@ use MY::Utils;
 use utf8;
 use M::User;
 use Data::Dumper;
+use Mot::IMOT::Dbmo;
 
 sub startup {
     my $self = shift;

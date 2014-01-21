@@ -35,7 +35,9 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">DBMO<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/dbmo/db_list">数据库列表</a></li>
+                        : if $c.current_user.info.is_admin {
                         <li><a href="/dbmo/add_db">添加数据库</a></li>
+                        : }
                     </ul>
                 </li>
             </ul>

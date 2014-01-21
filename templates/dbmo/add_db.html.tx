@@ -21,8 +21,21 @@
                 <p style="color:#d5d5d5" class="help-block">input DB Server Port</p><br />
             </div>
 
+            <label class="control-label" for="db_user"><i style="color:red">*</i> DB_User</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="db_user" name="db_user">
+                <p style="color:#d5d5d5" class="help-block">input DB User</p><br />
+            </div>
+            
+            <label class="control-label" for="db_passwd"> DB_Passwd</label>
+            <div class="controls">
+                <input type="text" class="input-xlarge" id="db_passwd" name="db_passwd">
+                <p style="color:#d5d5d5" class="help-block">input DB Passwd</p><br />
+            </div>
+            
             <div class="form-actions">
                 <button type="submit" id="add" class="btn btn-primary">Add</button>
+                <p class="text-info">Default Monitor Connections, Slow_queries, Com_select, Com_insert, Com_update, Com_delete, Os Util</p>
             </div>
         </div>
     </form>
