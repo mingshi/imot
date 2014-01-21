@@ -282,7 +282,6 @@ sub startup {
         'validate_user' => sub {
             my ($self, $username, $password, $msg) = @_;
             my $login = M::User::login($username, $password, $self->config->{login_key}, $self->config->{sign_key}, $self->config->{auth_url});
-            print Dumper($login);
 
             if ($login->{status} eq "err") {
                 $msg->{data} = $login->{msg};
