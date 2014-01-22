@@ -1,0 +1,10 @@
+: cascade layouts::default { title => 'DB Detail Info', menu => 'dbmo' }
+: around content -> {
+    <ul class="breadcrumb">
+        <li>
+            <a href="/">Home</a> <span class="divider">/</span>
+        </li>
+        <li class="active">DB状态实时详情 <span class="label label-info" style="font-size:18px; margin-left: 30px;"><: $db.server :>:<: $db.port :></span></li>
+    </ul> 
+
+: }

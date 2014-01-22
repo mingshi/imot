@@ -121,6 +121,9 @@ sub doProcess {
     my ($server) = @_;
     
     try {
+        
+        create_curr_table();
+
         my $tmpDbh = DBIx::Custom->connect(
             dsn     =>  "dbi:mysql:database=information_schema;host=$server->{server};port=$server->{port}",
             user    =>  $server->{db_user},
@@ -170,14 +173,17 @@ sub doProcess {
                         value   =>  $newData,
                     };
                 }
-
+                
                 my $insDbi = DBIx::Custom->connect(
                     dsn         =>  "dbi:mysql:database=$ENV{DBI_DATABASE};host=$ENV{DBI_HOST};port=$ENV{DBI_PORT}",
                     user        =>  $ENV{DBI_USER},
                     password    =>  $ENV{DBI_PASSWORD},
                 );
-
-                $insDbi->insert($ins, table => 'dbmo_value');
+                
+                my $today = strftime("%Y%m%d", time());
+                my $table = "dbmo_value_" . $today;
+                
+                $insDbi->insert($ins, table => $table);
                 
                 $insDbi->disconnect();
 
@@ -192,4 +198,29 @@ sub doProcess {
         my $s = $server->{server} . ":" . $server->{port};
         warn "can't get the $s status";
     }
+}
+
+sub create_curr_table {
+    my $today = strftime("%Y%m%d", time());
+    my $table = "dbmo_value_" . $today;
+   
+    my $createDbi = DBIx::Custom->connect(
+        dsn         =>  "dbi:mysql:database=$ENV{DBI_DATABASE};host=$ENV{DBI_HOST};port=$ENV{DBI_PORT}",
+        user        =>  $ENV{DBI_USER},
+        password    =>  $ENV{DBI_PASSWORD},
+    );
+   
+    $createDbi->execute(
+        "CREATE TABLE IF NOT EXISTS `$table` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `sid` int(11) NOT NULL DEFAULT '0',
+        `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `v_type` varchar(50) NOT NULL,
+        `value` varchar(50) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`),
+        KEY `searchsid` (`sid`,`v_type`,`create_time`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8" 
+    );
+    
+    $createDbi->disconnect();
 }

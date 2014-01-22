@@ -49,6 +49,22 @@ sub add_db {
     $self->render('dbmo/add_db');
 }
 
+sub detail {
+    my $self = shift;
+    my %params = $self->param_request({
+        id  =>  'UINT',
+    });
+    
+    my $db = M('dbmo_server')->find($params{id});
+
+    my %data = (
+        db  =>  $db,
+    );
+
+    $self->render('dbmo/detail', %data);
+}
+
+
 sub save {
     my $self = shift;
     
