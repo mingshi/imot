@@ -21,12 +21,15 @@ use warnings;
  
 use Mojo::Base 'MY::Controller';
 use Mojo::Util qw/encode/;
+use Text::Xslate::Util qw/mark_raw/;
 use MY::Utils;
 use List::MoreUtils qw/uniq/;
 use Scalar::Util qw/looks_like_number/;
 use Mojo::JSON;
 use JSON::XS;
 use Data::Dumper;
+use Date::Parse;
+use URI::Escape;
 
 sub db_list {
     my $self = shift;
@@ -53,16 +56,120 @@ sub detail {
     my $self = shift;
     my %params = $self->param_request({
         id  =>  'UINT',
+        start_time  =>  'STRING',
+        end_time    =>  'STRING',
     });
     
     my $db = M('dbmo_server')->find($params{id});
+    
+    my ($start_time, $end_time);
 
+    unless ($params{start_time}) {
+        $start_time = strftime("%Y-%m-%d %H:%M", time() - 10 * 60);
+    } else {
+        $start_time = $params{start_time};
+    }
+    unless ($params{end_time}) {
+        $end_time = strftime("%Y-%m-%d %H:%M", time());
+    } else {
+        $end_time = $params{end_time};
+    }
+  
+    my @dates = get_tables_by_date($start_time, $end_time);
+  
+    if ($end_time lt $start_time) {
+        return $self->fail('结束时间必须大于开始时间', go => "/dbmo/detail?id=" . $params{id});
+    }
+   
+    if (my $days = @dates > 7) {
+        return $self->fail('最多选择7天内的查询', go => "/dbmo/detail?id=" . $params{id})
+    }
+   
+    my @cates;
+    my @series;
+    my $tmpData = {};
+
+    for my $stepDate (@dates) {
+        my $table = "dbmo_value_" . $stepDate;
+        my @result = M("$table")->select({
+            -and    =>  [
+                'sid'   =>  $params{id},
+                'create_time'   =>  {'>='   =>  "$start_time"},
+                'create_time'   =>  {'<='   =>  "$end_time"}
+            ]    
+        },{
+            'order_by'  =>  'create_time',
+        })->all;
+        
+
+        for my $res (@result) {
+            my $val = strftime("%Y-%m-%d %H:%M", str2time($res->{data}{create_time}));
+            unless ($val ~~ @cates) {
+                push @cates, $val;
+            }
+            
+            my $tKey = strftime("%Y-%m-%d %H:%M", str2time("$res->{data}{create_time}"));
+            $tmpData->{$res->{data}{v_type}}->{$tKey} = $res->{data}{value};
+        }
+    }
+  
+    my @types;
+    foreach my $key (keys %$tmpData) {
+        push @types, $key;
+    }
+
+    for my $type (@types) {
+        my $tmpV;
+        $tmpV->{name} = $type;
+        my @tmpArr;
+        for my $cate (@cates) {
+            my $tmpValue;
+            $tmpValue = $tmpData->{$type}->{$cate} ? int($tmpData->{$type}->{$cate}) : 0;
+            
+            push @tmpArr, $tmpValue;
+        }
+        @{$tmpV->{data}} = @tmpArr;
+        
+        push @series, $tmpV;
+    }
+    
     my %data = (
         db  =>  $db,
+        start_time  =>  $start_time,
+        end_time    =>  $end_time,
+        cates       =>  mark_raw(encode_json(\@cates)),
+        series      => mark_raw(encode_json(\@series))
     );
 
     $self->render('dbmo/detail', %data);
 }
+
+##########################
+#根据时间日期获得分表表名#
+##########################
+sub get_tables_by_date {
+    my ($startTime, $endTime) = @_;
+    
+    my $start = strftime('%Y%m%d', str2time("$startTime"));
+
+    my $end = strftime('%Y%m%d', str2time("$endTime"));
+    
+    my @dates;
+
+    my $t = $start;
+
+    push @dates, $t;
+
+    while ($t < $end) {
+        my $tamp = str2time("$t") + 24 * 60 * 60;
+        my $d = strftime('%Y%m%d', $tamp);
+        push @dates, $d;
+        $t = $d;
+    }
+    return @dates;
+}
+
+
 
 
 sub save {

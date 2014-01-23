@@ -202,6 +202,7 @@ sub doProcess {
 
 sub create_curr_table {
     my $today = strftime("%Y%m%d", time());
+    
     my $table = "dbmo_value_" . $today;
    
     my $createDbi = DBIx::Custom->connect(

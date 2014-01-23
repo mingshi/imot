@@ -1,10 +1,71 @@
 : cascade layouts::default { title => 'DB Detail Info', menu => 'dbmo' }
 : around content -> {
+    <link rel="stylesheet" type="text/css" href="/datetimepicker/jquery.datetimepicker.css"/ >
+    <script src="/datetimepicker/jquery.datetimepicker.js"></script>
+    <script type="text/javascript" src="/highcharts/js/highcharts.js"></script> 
+    <script type="text/javascript" src="/highcharts/js/modules/exporting.js"></script> 
     <ul class="breadcrumb">
         <li>
             <a href="/">Home</a> <span class="divider">/</span>
         </li>
         <li class="active">DB状态实时详情 <span class="label label-info" style="font-size:18px; margin-left: 30px;"><: $db.server :>:<: $db.port :></span></li>
-    </ul> 
+    </ul>
+
+    <form class="form-search" method="get" action="">
+        <label>开始时间</label>
+        <input type="hidden" name="id" value="<: $db.id :>">
+        <input id="datetimepicker1" type="text" name="start_time" value="<: $start_time :>">
+
+        <label>结束时间</label>
+        <input id="datetimepicker2" type="text" name="end_time" value="<: $end_time :>">
+
+        <button type="submit" class="btn btn-primary">查询</button>
+    </form>
+    
+    <div id="container" style="min-width:700px;height:400px"></div>
+
+    <script type="text/javascript">
+        $(function() {
+            $("#datetimepicker1, #datetimepicker2").datetimepicker({
+                format: 'Y-m-d H:i',
+                lang: 'ch'
+            });
+
+
+            $('#container').highcharts({
+                title: {
+                    text: "<: $db.server :>" + ":" + "<: $db.port :>" + "实时状态",
+                    x: -20 //center
+                },
+                subtitle: {
+                    text: 'I am mingshi,u will like me!',
+                    x: -20
+                },
+                xAxis: {
+                    categories: <: $cates :>
+                },
+                yAxis: {
+                    title: {
+                        text: 'Corresponding Value'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    valueSuffix: '个'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: <: $series :>
+            }); 
+        });
+    </script>
 
 : }
