@@ -57,8 +57,10 @@ sub startup {
     $ENV{DBI_HOST} = '127.0.0.1';
     if ($ENV{ENV} eq "local") {
         $ENV{DBI_PASSWORD} = '';
+        $ENV{DBI_PORT} = 3306;
     } else {
         $ENV{DBI_PASSWORD} = 'thisisme!';
+        $ENV{DBI_PORT} = 3308;
     }
 
     $self->plugin('page_navigator', {
