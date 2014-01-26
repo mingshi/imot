@@ -63,12 +63,13 @@ if (@localHost ~~ /^$hostName$/) {
 
 $ENV{DBI_DATABASE} = 'imot';
 $ENV{DBI_USER} = 'root';
-$ENV{DBI_HOST} = '127.0.0.1';
 if ($ENV{ENV} eq "local") {
     $ENV{DBI_PASSWORD} = '';
+    $ENV{DBI_HOST} = '127.0.0.1';
     $ENV{DBI_PORT} = 3306;
 } else {
     $ENV{DBI_PASSWORD} = 'thisisme!';
+    $ENV{DBI_HOST} = '127.0.0.1:3308';
     $ENV{DBI_PORT} = 3308;
 }
 
@@ -127,7 +128,7 @@ sub doProcess {
         my $tmpDbh = DBIx::Custom->connect(
             dsn     =>  "dbi:mysql:database=information_schema;host=$server->{server};port=$server->{port}",
             user    =>  $server->{db_user},
-            password    =>  $server->{data}{db_passwd},
+            password    =>  $server->{db_passwd},
             option  =>  {
                 mysql_enable_utf8 => 1,
                 quote_char => '`',
