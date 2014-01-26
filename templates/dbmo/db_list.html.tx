@@ -2,12 +2,25 @@
 : around content -> {
     <ul class="thumbnails" scrollpagination="enabled">
         : for $list_data -> $server {
-            <li class="span2">
+            <li class="span2" style="position: relative;">
                 <a style="cursor:pointer;" href="detail?id=<: $server.id :>"><img style="width:100px;" src="/images/db.png" /></a>
+                : if $c.current_user.info.is_admin { 
+                <a class="deleteDb" href="delete?id=<: $server.id :>" style="color:red; position: absolute; top: 80px;">删除</a>
+                : }
                 <span style="text-align:center;">
                     <: $server.server :>:<: $server.port :>
                 </span>
             </li>
         : }
     </ul>
+
+    <script type="text/javascript">
+        $(function() {
+            $(".deleteDb").click(function() {
+                if (!confirm('确定删除吗?')) {
+                    return false;
+                }
+            });
+        });
+    </script>
 : }

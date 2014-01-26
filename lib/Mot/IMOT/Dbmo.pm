@@ -144,6 +144,30 @@ sub detail {
     $self->render('dbmo/detail', %data);
 }
 
+sub delete {
+    my $self = shift;
+    my %params = $self->param_request({
+        id  =>  'UINT',    
+    });
+    
+    unless ($self->_check_admin) {
+        return $self->fail("你没有权限", go => 'dbmo/db_list');    
+    }
+
+    my $dbserver = M('dbmo_server')->find($params{id});
+    unless ($dbserver) {
+        return $self->fail("没有该DB", go => 'dbmo/db_list');
+    }
+
+    my $where = ({
+        id  =>  $params{id},
+    });
+
+    my $res = M('dbmo_server')->delete($params{id});
+
+    return $self->succ('删除成功', go => 'dbmo/db_list');
+}
+
 ##########################
 #根据时间日期获得分表表名#
 ##########################
