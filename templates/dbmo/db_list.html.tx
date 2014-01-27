@@ -25,12 +25,10 @@
             });
             
             $(".span2").hover(function() {
-                console.log("11111");
                 $(this).children(".deleteDb").show();
             });
 
             $(".span2").mouseleave(function() {
-                console.log("222222");
                 $(this).children(".deleteDb").hide();
             });
 
